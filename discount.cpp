@@ -182,43 +182,85 @@ void Wear::Show_Discount(){
 }
 
 //Market派生类实现
+struct GroceryItem {  
+    string name;  
+    double discount;  
+  
+    GroceryItem(const string& name, double discount)  
+        : name(name), discount(discount) {}  
+};  
+class Market {  
+private:     
+    string discountInformation; 
+    vector<GroceryItem> groceries;  
+    
+public:
 void Market::Show_Groceries(){
-
+    for (const auto& grocery : groceries) {  
+            cout << grocery << endl;  
 }
 
-void Market::Set_Groceries(){
-
+void Market::Set_Groceries(const vector<GroceryItem>& newGroceries){
+    groceries.clear();  
+        for (const auto& grocery : newGroceries) {  
+            groceries.push_back(grocery);  
+        }  
 }
 
-void Market::Add_Groceries(){
-
+void Market::Add_Groceries(const string& name, double discount){
+        groceries.push_back(GroceryItem(name, discount));
 }
 
-void Market::Delete_Groceries(){
-
+void Market::Delete_Groceries(const string& grocery){
+    auto it = find(groceries.begin(),groceries.end(),grocery);
+    if(it != groceries.end()){
+        groceries.erase(it);
+    }
 }
 
 void Market::Show_Discount(){
-
+    cout << "折扣为：" << discountInformation<< endl;
+}
 }
 
 //Apperance派生类实现
-void Apperance::Show_Service(){
-
-}
-
-void Apperance::Set_Service(){
-
-}
-
-void Apperance::Add_Service(){
-
-}
-
-void Apperance::Delete_Service(){
-
-}
-
-void Apperance::Show_Discount(){
+struct ServiceItem {  
+    string name;  
+    double discount;  
+  
+    ServiceItem(const string& name, double discount)  
+        : name(name), discount(discount) {}  
+};  
+class Appearance {  
+private:     
+    string discountInformation; 
+    vector<ServiceItem> services;  
     
+public:
+void Appearance::Show_Service(){
+    for (const auto& ServiceItem : services) {  
+            cout << service << endl;  
+}
+
+void Appearance::Set_Service(const vector<ServiceItem>& newService){
+    services.clear();  
+        for (const auto& service : newService) {  
+            services.push_back(service);  
+        }  
+}
+
+void Appearance::Add_Service(const string& name, double discount){
+        services.push_back(ServiceItem(name, discount));
+}
+
+void Appearance::Delete_Service(const string& grocery){
+    auto it = find(services.begin(),services.end(),service);
+    if(it != services.end()){
+        services.erase(it);
+    }
+}
+
+void Appearance::Show_Discount(){
+    cout << "折扣为：" << discountInformation<< endl;
+}
 }
