@@ -100,7 +100,9 @@ bool Manager::LogIn(){
 }
 
 void Manager::Show_Balance(){
-
+    for (auto it = Malls.begin(); it != Malls.end(); it++) {
+        cout<<it.Mall_name
+    }
 }
 
 void Manager::Deposit(){
@@ -140,46 +142,123 @@ void Manager::Show_All(){
 }
 
 //Food派生类实现
-void Food::Show_Dish(){
-
+void Food::Show_Discount(){
+    for (auto it=Dish.begin(); i !=Dish.end(); i++) {
+        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout<<"折扣日期： "<<
+        cout << endl;
+    }
 }
 
 void Food::Set_Dish(){
+    cout << "请输入您想要设置的商品名称： "；
+    string what_tem;
+    cin >> what_tem;
+    for (auto it = Dish.begin(); it != Dish.end(); it++) {
+        if (it.what == what_tem) {
+            cout << "请输入您想设置的该商品折扣： ";
+            string discount_tem;
+            cin >> discount_tem;
+            it.discount_tem = discount_tem;
+            cout << "修改成功！" << endl;
+        }
+        else {
+            cout << "抱歉，未找到相关商品" << endl;
+        }
+    }
 
 }
 
 void Food::Add_Dish(){
-
+    cout << "输入您想增加的商品名称： ";
+    cin >> what_tem;
+    cout << "输入您想增加的该商品的折扣： ";
+    cin >> discount_tem;
+    struct Commodity { what_tem,discount_tem; };
+    Dfish.push_back(Commodity);
+    cout << "添加成功！" << endl;
 }
 
 void Food::Delete_Dish(){
-
+    cout << "请输入您想删除的商品名称： ";
+    cin >> what_tem;
+    for (auto it = Dish.begin(); it != Dish.end(); it++) {
+        if (it.what == what_tem) {
+            cout << "确认删除？Y/N"<<endl；
+                string test;
+            if (test == Y) {
+                Dish.erase(it);
+                cout << "删除成功！" << endl;
+            }
+            else if (test == N) {
+                return 0;
+            }
+            else {
+                cout << "输入错误！请重试……" << endl;
+            }
+        }
+    }
 }
 
-void Food::Show_Discount(){
-
-}
 
 //Wear派生类实现
-void Wear::Show_Clothing(){
-
+void Wear::Show_Discount() {
+    for (auto it = Clothing.begin(); i != Clothing.end(); i++) {
+        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout << endl;
+    }
 }
 
-void Wear::Set_Clothing(){
 
+void Wear::Set_Clothing(){
+    cout << "请输入您想要设置的商品名称： "；
+        string what_tem;
+    cin >> what_tem;
+    for (auto it = Clothin.begin(); it != Clothin.end(); it++) {
+        if (it.what == what_tem) {
+            cout << "请输入您想设置的该商品折扣： ";
+            string discount_tem;
+            cin >> discount_tem;
+            it.discount_tem = discount_tem;
+            cout << "修改成功！" << endl;
+        }
+        else {
+            cout << "抱歉，未找到相关商品" << endl;
+        }
+    }
 }
 
 void Wear::Add_Clothing(){
-
+    cout << "输入您想增加的商品名称： ";
+    cin >> what_tem;
+    cout << "输入您想增加的该商品的折扣： ";
+    cin >> discount_tem;
+    struct Commodity { what_tem, discount_tem; };
+    Clothing.push_back(Commodity);
+    cout << "添加成功！" << endl;
 }
 
 void Wear::Delete_Clothing(){
-
+    cout << "请输入您想删除的商品名称： ";
+    cin >> what_tem;
+    for (auto it = Clothingh.begin(); it != Clothing.end(); it++) {
+        if (it.what == what_tem) {
+            cout << "确认删除？Y/N" << endl；
+                string test;
+            if (test == Y) {
+                Clothing.erase(it);
+                cout << "删除成功！" << endl;
+            }
+            else if (test == N) {
+                return 0;
+            }
+            else {
+                cout << "输入错误！请重试……" << endl;
+            }
+        }
+    }
 }
 
-void Wear::Show_Discount(){
-
-}
 
 //Market派生类实现
 void Market::Show_Groceries(){
