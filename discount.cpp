@@ -12,7 +12,37 @@ User::User(){
     /*注册（新建一个用户）时调用，函数包含注册时的交互信息
     注意判断新用户名与已有用户的用户名是否重合
     最后要获取UserName和PassWord这两个数据成员，并自动生成id*/
-
+    string passwd;
+    bool upper=false;
+    bool lower=false;
+    bool number=false;
+    int passwd_len;
+    cout<<"探索独家优惠，从这里开始！";
+    cout<<"用户名：";
+    cin>>UserName;
+PASSWORD_AGAIN:
+    cout<<endl;
+    cout<<"密码：";
+    cin>>passwd;
+    passwd_len=passwd.size();
+    if(passwd_len<8||passwd_len>16){
+        cout<<"密码长度不合法！请重新设置";
+        goto PASSWORD_AGAIN;
+    } 
+    for(int i=0;i<passwd_len;i++){
+        if(passwd[i]>=65&&passwd[i]<=90)
+            upper=true;
+        if(passwd[i]>=97&&passwd[i]<=122)
+            lower=true;
+        if(passwd[i]>=48&&passwd[i]<=57)
+            number=true;
+        if(upper&lower&number) break;
+    }
+    if(!(upper&lower&number)){
+        cout<<"密码必须包含大小写字母和阿拉伯数字，请重新设置";
+        goto PASSWORD_AGAIN;
+    }
+    cout<<"密码设置成功";
 }
 
 User::~User(){
