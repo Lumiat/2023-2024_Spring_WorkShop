@@ -69,7 +69,8 @@ void User::Change_Password(){
 }
 
 //Mall派生类实现
-bool Mall::LogIn(){
+bool Mall::LogIn()
+{
     
 }
 
@@ -383,9 +384,22 @@ void Mall::Show_Pursue_History()
     }
 }
 
+void Mall::Update_Rate(double newRating)
+{
+    double totalRating = Rate * RatePeo;
+    totalRating += newRating;
+    RatePeo++;
+    Rate = double(totalRating / RatePeo);
+}
+
 int Mall::get_id1()
 {
     return id1;
+}
+
+string Mall::GetMallName()
+{
+    return  Mall_name;
 }
 
 //Buyer派生类实现
@@ -393,20 +407,74 @@ bool Buyer::LogIn(){
 
 }
 
-void Buyer::SearchItem(){
-
+void Buyer::SearchItem()
+{
+    string BrandName;
+    cout << "请输入您想要查询的店铺： ";
+    cin >> BrandName;
+    for (const auto& mall : Malls) {
+        for (const auto& shop : mall.Shops) {
+            if (shop->GetBrandName() == brandName) {
+                shop->Show_Discount();
+                FootPrint.push_back(BrandName);
+                return;
+            }
+        }
+    }
+    cout << "非常抱歉，未查询到该店铺的信息。" << endl;
 }
 
-void Buyer::Rating(){
+void Buyer::Rating()
+{
+    string mallName;
+    double rating;
+    cout << "请输入您想要评分的商场：";
+    cin >> mallName;
+    cout << "请输入评分 (0.0 - 5.0)：";
+    cin >> rating;
+    if (rating < 0.0 || rating > 5.0) {
+        cout << "评分无效，请输入 0.0 到 5.0 之间的数值。" << endl;
+        return;
+    }
 
+    for (auto& mall : Malls) {
+        if (mall.GetMallName() == mallName) {
+            mall.UpdateRate(rating);
+            cout << "评分已提交。" << endl;
+            return;
+        }
+    }
+    cout << "未找到指定的商场。" << endl;
 }
 
-void Buyer::Show_FootPrint(){
-
+void Buyer::Show_FootPrint()
+{
+    cout << "您浏览过的店铺：" << endl;
+    for (const auto& brandName : FootPrint) 
+    {
+        bool found = false;
+        for (const auto& mall : Malls) 
+        {
+            for (const auto& shop : mall.Shops) 
+            {
+                if (shop->GetBrandName() == brandName)
+                {
+                    shop->Show_Discount();
+                    found = true;
+                    break;
+                }
+            }
+            if (found) break;
+        }
+        if (!found) {
+            cout << "商铺 " << brandName << " 当前没有活动。" << endl;
+        }
+    }
 }
 
-int Buyer::get_id2(){
-
+int Buyer::get_id2()
+{
+    return id2;
 }
 
 //Manager类实现
@@ -459,6 +527,15 @@ void Manager::Show_All(){
 
 //Food派生类实现
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+void Food::Show_Discount(){
+    for (auto it=Dish.begin(); i !=Dish.end(); i++) {
+        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout<<"折扣日期： "<<
+        cout << endl;
+    }
+>>>>>>> 60390c39b75e480c818b3c403bdb1734baf1fe4d
 string Food::GetBrandName()
 {
     return Brand_Name;
@@ -466,6 +543,7 @@ string Food::GetBrandName()
 
 void Food::Show_Dish(){
 
+<<<<<<< HEAD
 =======
 void Food::Show_Discount(){
     for (auto it=Dish.begin(); i !=Dish.end(); i++) {
@@ -474,6 +552,8 @@ void Food::Show_Discount(){
         cout << endl;
     }
 >>>>>>> origin/DFish
+=======
+>>>>>>> 60390c39b75e480c818b3c403bdb1734baf1fe4d
 }
 
 void Food::Set_Dish(){
@@ -529,6 +609,14 @@ void Food::Delete_Dish(){
 
 //Wear派生类实现
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+void Wear::Show_Discount() {
+    for (auto it = Clothing.begin(); i != Clothing.end(); i++) {
+        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout << endl;
+    }
+>>>>>>> 60390c39b75e480c818b3c403bdb1734baf1fe4d
 string Wear::GetBrandName()
 {
     return Brand_Name;
@@ -536,6 +624,7 @@ string Wear::GetBrandName()
 
 void Wear::Show_Clothing(){
 
+<<<<<<< HEAD
 =======
 void Wear::Show_Discount() {
     for (auto it = Clothing.begin(); i != Clothing.end(); i++) {
@@ -543,6 +632,8 @@ void Wear::Show_Discount() {
         cout << endl;
     }
 >>>>>>> origin/DFish
+=======
+>>>>>>> 60390c39b75e480c818b3c403bdb1734baf1fe4d
 }
 
 
@@ -597,7 +688,6 @@ void Wear::Delete_Clothing(){
 
 
 //Market派生类实现
-<<<<<<< HEAD
 struct GroceryItem {  
     string name;  
     double discount;  
@@ -611,13 +701,11 @@ private:
     vector<GroceryItem> groceries;  
     
 public:
-=======
 string Market::GetBrandName()
 {
     return Brand_Name;
 }
 
->>>>>>> Bottle
 void Market::Show_Groceries(){
     for (const auto& grocery : groceries) {  
             cout << grocery << endl;  
@@ -647,6 +735,18 @@ void Market::Show_Discount(){
 }
 
 //Apperance派生类实现
+struct ServiceItem {  
+    string name;  
+    double discount;  
+  
+    ServiceItem(const string& name, double discount)  
+        : name(name), discount(discount) {}  
+};  
+class Appearance {  
+private:     
+    string discountInformation; 
+    vector<ServiceItem> services;  
+    
 void Appearance::Show_Service(){
     for (const auto& ServiceItem : services) {  
             cout << service << endl;  
@@ -672,5 +772,4 @@ void Appearance::Delete_Service(const string& grocery){
 
 void Appearance::Show_Discount(){
     cout << "折扣为：" << discountInformation<< endl;
-}
 }
