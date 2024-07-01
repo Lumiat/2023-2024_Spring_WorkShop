@@ -458,14 +458,12 @@ void Manager::Show_All(){
 
 
 //Food派生类实现
-<<<<<<< HEAD
 void Food::Show_Discount(){
     for (auto it=Dish.begin(); i !=Dish.end(); i++) {
         cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
         cout<<"折扣日期： "<<
         cout << endl;
     }
-=======
 string Food::GetBrandName()
 {
     return Brand_Name;
@@ -473,7 +471,6 @@ string Food::GetBrandName()
 
 void Food::Show_Dish(){
 
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
 }
 
 void Food::Set_Dish(){
@@ -528,13 +525,11 @@ void Food::Delete_Dish(){
 
 
 //Wear派生类实现
-<<<<<<< HEAD
 void Wear::Show_Discount() {
     for (auto it = Clothing.begin(); i != Clothing.end(); i++) {
         cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
         cout << endl;
     }
-=======
 string Wear::GetBrandName()
 {
     return Brand_Name;
@@ -542,7 +537,6 @@ string Wear::GetBrandName()
 
 void Wear::Show_Clothing(){
 
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
 }
 
 
@@ -597,7 +591,6 @@ void Wear::Delete_Clothing(){
 
 
 //Market派生类实现
-<<<<<<< HEAD
 struct GroceryItem {  
     string name;  
     double discount;  
@@ -611,13 +604,11 @@ private:
     vector<GroceryItem> groceries;  
     
 public:
-=======
 string Market::GetBrandName()
 {
     return Brand_Name;
 }
 
->>>>>>> Bottle
 void Market::Show_Groceries(){
     for (const auto& grocery : groceries) {  
             cout << grocery << endl;  
@@ -647,7 +638,6 @@ void Market::Show_Discount(){
 }
 
 //Apperance派生类实现
-<<<<<<< HEAD
 struct ServiceItem {  
     string name;  
     double discount;  
@@ -659,30 +649,6 @@ class Appearance {
 private:     
     string discountInformation; 
     vector<ServiceItem> services;  
-=======
-string Apperance::GetBrandName()
-{
-    return Brand_Name;
-}
-
-void Apperance::Show_Service(){
-
-}
-
-void Apperance::Set_Service(){
-
-}
-
-void Apperance::Add_Service(){
-
-}
-
-void Apperance::Delete_Service(){
-
-}
-
-void Apperance::Show_Discount(){
->>>>>>> Bottle
     
 public:
 void Appearance::Show_Service(){
