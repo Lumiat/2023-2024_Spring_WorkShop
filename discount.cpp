@@ -864,7 +864,21 @@ void Manager::Show_All(){
 double Manager::balance=0;
 int Manager::id3=177000000;
 
+<<<<<<< HEAD
 string Brand::Get_Brand_Name() {
+=======
+//Food派生类实现
+
+void Food::Show_Discount(){
+    for (auto it=Dish.begin(); i !=Dish.end(); i++) {
+        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout << "折扣日期： " << Start_Date << "-" << End_Date;
+        cout << endl;
+    }
+
+string Food::GetBrandName()
+{
+>>>>>>> 50577b692d8f69b479c238344b799530f5a03a6a
     return Brand_Name;
 }
 
@@ -879,18 +893,15 @@ void Food::Show_Discount() {
 
 void Food::Show_Dish(){
 
-<<<<<<< HEAD
-=======
 void Food::Show_Discount(){
     for (auto it=Dish.begin(); i !=Dish.end(); i++) {
         cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
         cout<<"折扣日期： "<<
         cout << endl;
     }
->>>>>>> origin/DFish
-=======
->>>>>>> 60390c39b75e480c818b3c403bdb1734baf1fe4d
+
 }
+
 
 void Food::Set_Dish(){
     cout << "请输入您想要设置的商品名称： "；
@@ -944,32 +955,25 @@ void Food::Delete_Dish(){
 
 
 //Wear派生类实现
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 void Wear::Show_Discount() {
     for (auto it = Clothing.begin(); i != Clothing.end(); i++) {
         cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout << "折扣日期： " << Start_Date << "-" << End_Date;
         cout << endl;
     }
->>>>>>> 60390c39b75e480c818b3c403bdb1734baf1fe4d
+}
 string Wear::GetBrandName()
 {
     return Brand_Name;
 }
 
-void Wear::Show_Clothing(){
 
-<<<<<<< HEAD
-=======
 void Wear::Show_Discount() {
     for (auto it = Clothing.begin(); i != Clothing.end(); i++) {
         cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
         cout << endl;
     }
->>>>>>> origin/DFish
-=======
->>>>>>> 60390c39b75e480c818b3c403bdb1734baf1fe4d
+
 }
 
 
@@ -1024,6 +1028,7 @@ void Wear::Delete_Clothing(){
 
 
 //Market派生类实现
+
 struct GroceryItem {  
     string name;  
     double discount;  
@@ -1041,6 +1046,7 @@ string Market::GetBrandName()
 {
     return Brand_Name;
 }
+
 
 void Market::Show_Groceries(){
     for (const auto& grocery : groceries) {  
@@ -1082,6 +1088,14 @@ class Appearance {
 private:     
     string discountInformation; 
     vector<ServiceItem> services;  
+
+
+string Apperance::GetBrandName()
+{
+    return Brand_Name;
+}
+
+
     
 void Appearance::Show_Service(){
     for (const auto& ServiceItem : services) {  
