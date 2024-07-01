@@ -12,11 +12,43 @@ User::User(){
     /*注册（新建一个用户）时调用，函数包含注册时的交互信息
     注意判断新用户名与已有用户的用户名是否重合
     最后要获取UserName和PassWord这两个数据成员，并自动生成id*/
-
+    /*目前缺少重名问题判断，等数据存储格式规定一起完成*/
+    string passwd;
+    bool upper=false;
+    bool lower=false;
+    bool number=false;
+    int passwd_len;
+    cout<<"探索独家优惠，从这里开始！";
+    cout<<"用户名：";
+    cin>>UserName;
+PASSWORD_AGAIN:
+    cout<<endl;
+    cout<<"密码：";
+    cin>>passwd;
+    passwd_len=passwd.size();
+    if(passwd_len<8||passwd_len>16){
+        cout<<"密码长度不合法！长度不超过16且不小于8"<<endl;
+        cout<<"请重新设置";
+        goto PASSWORD_AGAIN;
+    } 
+    for(int i=0;i<passwd_len;i++){
+        if(passwd[i]>=65&&passwd[i]<=90)
+            upper=true;
+        if(passwd[i]>=97&&passwd[i]<=122)
+            lower=true;
+        if(passwd[i]>=48&&passwd[i]<=57)
+            number=true;
+        if(upper&lower&number) break;
+    }
+    if(!(upper&lower&number)){
+        cout<<"密码必须包含大小写字母和阿拉伯数字，请重新设置";
+        goto PASSWORD_AGAIN;
+    }
+    cout<<"密码设置成功"<<endl<<"注册成功，欢迎加入我们！";
 }
 
 User::~User(){
-
+    /*文件处理，从文件移除该对象的所有*/
 }
 
 bool User::LogIn(){
@@ -565,53 +597,80 @@ void Wear::Delete_Clothing(){
 
 
 //Market派生类实现
+<<<<<<< HEAD
+struct GroceryItem {  
+    string name;  
+    double discount;  
+  
+    GroceryItem(const string& name, double discount)  
+        : name(name), discount(discount) {}  
+};  
+class Market {  
+private:     
+    string discountInformation; 
+    vector<GroceryItem> groceries;  
+    
+public:
+=======
 string Market::GetBrandName()
 {
     return Brand_Name;
 }
 
+>>>>>>> Bottle
 void Market::Show_Groceries(){
-
+    for (const auto& grocery : groceries) {  
+            cout << grocery << endl;  
 }
 
-void Market::Set_Groceries(){
-
+void Market::Set_Groceries(const vector<GroceryItem>& newGroceries){
+    groceries.clear();  
+        for (const auto& grocery : newGroceries) {  
+            groceries.push_back(grocery);  
+        }  
 }
 
-void Market::Add_Groceries(){
-
+void Market::Add_Groceries(const string& name, double discount){
+        groceries.push_back(GroceryItem(name, discount));
 }
 
-void Market::Delete_Groceries(){
-
+void Market::Delete_Groceries(const string& grocery){
+    auto it = find(groceries.begin(),groceries.end(),grocery);
+    if(it != groceries.end()){
+        groceries.erase(it);
+    }
 }
 
 void Market::Show_Discount(){
-
+    cout << "折扣为：" << discountInformation<< endl;
+}
 }
 
 //Apperance派生类实现
-string Apperance::GetBrandName()
-{
-    return Brand_Name;
+void Appearance::Show_Service(){
+    for (const auto& ServiceItem : services) {  
+            cout << service << endl;  
 }
 
-void Apperance::Show_Service(){
-
+void Appearance::Set_Service(const vector<ServiceItem>& newService){
+    services.clear();  
+        for (const auto& service : newService) {  
+            services.push_back(service);  
+        }  
 }
 
-void Apperance::Set_Service(){
-
+void Appearance::Add_Service(const string& name, double discount){
+        services.push_back(ServiceItem(name, discount));
 }
 
-void Apperance::Add_Service(){
-
+void Appearance::Delete_Service(const string& grocery){
+    auto it = find(services.begin(),services.end(),service);
+    if(it != services.end()){
+        services.erase(it);
+    }
 }
 
-void Apperance::Delete_Service(){
-
+void Appearance::Show_Discount(){
+    cout << "折扣为：" << discountInformation<< endl;
 }
-
-void Apperance::Show_Discount(){
-    
 }
