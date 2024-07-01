@@ -1,6 +1,9 @@
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "discount.h"
-#include<iostream>
-#include<fstream>
+
+using namespace std;
 
 bool check_passwd_validity(int passwd_len, string passwd) {
     bool upper = false;
@@ -53,6 +56,7 @@ bool check_username_validity(string UserName) {
     }
     return true;
 }
+
 //User基类的函数实现
 void Register(){
     /*注册（新建一个用户）时调用，函数包含注册时的交互信息
@@ -66,9 +70,54 @@ void Register(){
     cout<<"探索独家优惠，从这里开始！";
     cout << "请选择您的身份：1.我是商场方 2.我是购物者 3.我是平台管理员" << endl;
     cin >> choice;
-
+    json data;
+    ifstream data_file;
+    ofstream data_out;
+    bool file_opened = true;
     switch (choice) {
     case 1:
+        data_file.open("I:/Discount_At_Your_Hand/Datas/Malls.json");
+        if (!data_file.is_open()) {
+            cerr << "Failed to open Malls.json" << endl;
+            file_opened = false;
+            break;
+        }
+        data_file >> data;
+        data_file.close();
+        break;
+    case 2:
+        data_file.open("I:/Discount_At_Your_Hand/Datas/Buyers.json");
+        if (!data_file.is_open()) {
+            cerr << "Failed to open Buyers.json" << endl;
+            file_opened = false;
+            break;
+        }
+        data_file >> data;
+        data_file.close();
+        break;
+    case 3:
+        data_file.open("I:/Discount_At_Your_Hand/Datas/Managers.json");
+        if (!data_file.is_open()) {
+            cerr << "Failed to open Managers.json" << endl;
+            file_opened = false;
+            break;
+        }
+        data_file >> data;
+        data_file.close();
+        break;
+    default:
+        cout << "无效的选择，请重新选择" << endl;
+        file_opened = false;
+        break;
+    }
+
+    if (!data_file.is_open()) {
+        cerr << "Failed to open the file" << endl;
+        return;
+    }
+
+    switch (choice) {
+    case 1: {
     NAME_AGAIN1:
         cout << "商场名：";
         cin >> UserName;
@@ -83,8 +132,6 @@ void Register(){
             goto PASSWORD_AGAIN1;
         cout << "密码设置成功" << endl;
         /*写入新的用户到Malls.json*/
-        json data;
-        malls_data >> data;
         json new_mall = {
             {"username",UserName},
             {"passwd",passwd},
@@ -100,9 +147,11 @@ void Register(){
         data["malls"].push_back(new_mall);
 
         // 将更新后的 JSON 数据写入文件
-        malls_data << setw(4) << data << std::endl;
+        malls_data << setw(4) << data << endl;
+        cout << "注册成功，欢迎加入我们！" << endl;
         break;
-    case 2:
+    }
+    case 2: {
     NAME_AGAIN2:
         cout << "用户名：";
         cin >> UserName;
@@ -116,9 +165,7 @@ void Register(){
         if (!check_passwd_validity(passwd_len, passwd))
             goto PASSWORD_AGAIN2;
         cout << "密码设置成功" << endl;
-        /*写入新的用户到Malls.json*/
-        json data;
-        buyers_data >> data;
+        /*写入新的用户到Buyers.json*/
         json new_buyer = {
             {"username",UserName},
             {"passwd",passwd},
@@ -131,8 +178,10 @@ void Register(){
 
         // 将更新后的 JSON 数据写入文件
         buyers_data << setw(4) << data << endl;
+        cout << "注册成功，欢迎加入我们！" << endl;
         break;
-    case 3:
+    }
+    case 3: {
     NAME_AGAIN3:
         cout << "用户名：";
         cin >> UserName;
@@ -146,9 +195,7 @@ void Register(){
         if (!check_passwd_validity(passwd_len, passwd))
             goto PASSWORD_AGAIN3;
         cout << "密码设置成功" << endl;
-        /*写入新的用户到Malls.json*/
-        json data;
-        managers_data >> data;
+        /*写入新的用户到Managers.json*/
         json new_manager = {
             {"username",UserName},
             {"passwd",passwd},
@@ -161,13 +208,15 @@ void Register(){
 
         // 将更新后的 JSON 数据写入文件
         managers_data << setw(4) << data << endl;
+        cout << "注册成功，欢迎加入我们！" << endl;
         break;
     }
-        cout << "注册成功，欢迎加入我们！" << endl;
+    }
+    
 }
 
 /*只用读取外存文件*/
-bool User::LogIn(const fstream &ifs)
+bool User::LogIn(fstream &ifs)
 {
     /*判断用户名存在性--->判断密码与用户名的匹配
     匹配返回true，否则返回false，将尝试次数上限的逻辑在主函数交互完成*/
@@ -212,19 +261,124 @@ TRY_PASSWD_AGAIN:
 }
 
 /*先验证身份再更改*/
-void User::Change_Name(fstream &iofs){
+void User::LogOut(fstream &iofs,const string& logged_name) {
+    string passwd;
+    bool flag = false;
+    json data;
+    iofs >> data;
+    string master_key = data.begin().key();
+    cout << "身份认证" << endl;
+    cout << "请输入密码：";
+    cin >> passwd;
 
+    json data;
+    iofs >> data;
+    string master_key = data.begin().key();
+
+    // 查找用户名与密码匹配的用户
+    for (auto it = data[master_key].begin(); it != data[master_key].end(); ++it) {
+        if ((*it)["username"] == logged_name && (*it)["passwd"] == passwd) {
+            flag = true;
+
+            // 确认注销
+            int choice;
+            cout << "确认注销：1.是 2.否" << endl;
+            cin >> choice;
+            if (choice == 1) {
+                // 从JSON数组中删除用户
+                it = data[master_key].erase(it);
+                cout << "用户已注销" << endl;
+            }
+            else {
+                cout << "取消注销操作" << endl;
+            }
+            break;
+        }
+    }
+
+    if (!flag)
+        cout << "用户名或密码错误，身份认证失败" << endl;
+    
+
+    // 将更新后的 JSON 数据写入文件
+    iofs.seekp(0);  // 将写入位置移动到文件开头
+    iofs << setw(4) << data << endl;
 }
 
-void User::Change_Password(){
 
+
+void User::Change_Name(fstream &iofs,const string& old_name){
+    bool flag = false;
+    string new_name;
+CHANGE_NAME_AGAIN:
+    cout << "请输入更改后的用户名：";
+    cin >> new_name;
+
+    json data;
+    iofs >> data;
+    string master_key = data.begin().key();
+    if(check_username_validity(new_name)) goto CHANGE_NAME_AGAIN;
+
+    // 查找需要更改用户名的用户
+    for (auto& kind : data[master_key]) {
+        if (kind["username"] == old_name) {
+            kind["username"] = new_name;
+            flag = true;
+            cout << "用户名已成功更改为：" << new_name << endl;
+            break;
+        }
+    }
+
+    // 将更新后的 JSON 数据写入文件
+    iofs.seekp(0);  // 将写入位置移动到文件开头
+    iofs << setw(4) << data << endl;
 }
+
+void User::Change_Password(fstream &iofs,const string& logged_name ){
+    string oldPassword, newPassword;
+    bool flag = false;
+    int total_try = 0;
+PIN_CHANGE_AGAIN:
+    cout << "当前密码：";
+    cin >> oldPassword;
+
+    json data;
+    iofs >> data;
+    string master_key = data.begin().key();
+
+    // 查找用户并验证旧密码
+    for (auto& kind : data[master_key]) {
+        if (kind["username"] == logged_name) {
+            if (kind["passwd"] == oldPassword) {
+                flag = true;
+                cout << "新的密码：";
+                cin >> newPassword;
+                kind["passwd"] = newPassword;
+                cout << "密码已成功更改" << endl;
+                break;
+            }
+            else {
+                total_try++;
+                cout << "密码错误，请重试" << endl;
+                if (total_try == 3) {
+                    cout << "达到次数上限，无法更改密码！" << endl;
+                    return;
+                }
+                else {
+                    cout << "还有" << 3 - total_try << "次机会" << endl;
+                    goto PIN_CHANGE_AGAIN;
+                }
+            }
+        }
+    }
+
+    // 将更新后的 JSON 数据写入文件
+    iofs.seekp(0);  // 将写入位置移动到文件开头
+    iofs << setw(4) << data << endl;
+}
+
 
 //Mall派生类实现
-void Mall::LogOut() {
-
-}
-
 void Mall::Show_Advertise()
 {
     if (Shops.empty())
@@ -348,7 +502,7 @@ void Mall::Set_Advertise()
     cout << "请选择需要更改折扣信息的店铺：" << endl;
     for (int i = 0; i < Shops.size(); i++)
     {
-        cout << i + 1 << ". " << Shops[i]->GetBrandName() << endl; // 显示店铺序号和类型
+        cout << i + 1 << ". " << Shops[i]->Get_Brand_Name() << endl; // 显示店铺序号和类型
     }
 
     int choice;
@@ -381,7 +535,7 @@ void Mall::Set_Advertise()
     {
         cout << "未知店铺类型。" << endl;
     }
-    cout << "店铺：" << Shops[choice - 1]->GetBrandName() << "的信息已经修改" << endl;
+    cout << "店铺：" << Shops[choice - 1]->Get_Brand_Name() << "的信息已经修改" << endl;
     system("pause");
     system("cls");
     return;
@@ -400,7 +554,7 @@ void Mall::Delete_Advertise()
     cout << "请选择需要删除折扣信息的店铺：" << endl;
     for (int i = 0; i < Shops.size(); i++) 
     {
-        cout << i + 1 << ". " << Shops[i]->GetBrandName() << endl; // 显示店铺序号和类型
+        cout << i + 1 << ". " << Shops[i]->Get_Brand_Name() << endl; // 显示店铺序号和类型
     }
 
     int choice;
@@ -553,11 +707,6 @@ string Mall::GetMallName()
     return  Mall_name;
 }
 
-//Buyer派生类实现
-bool Buyer::LogIn(){
-
-}
-
 void Buyer::SearchItem()
 {
     string BrandName;
@@ -565,7 +714,7 @@ void Buyer::SearchItem()
     cin >> BrandName;
     for (const auto& mall : Malls) {
         for (const auto& shop : mall.Shops) {
-            if (shop->GetBrandName() == brandName) {
+            if (shop->GetBrandName() == BrandName) {
                 shop->Show_Discount();
                 FootPrint.push_back(BrandName);
                 return;
@@ -629,17 +778,6 @@ int Buyer::get_id2()
 }
 
 //Manager类实现
-class Manager:public User{
-private:
-    static vector<History> Deposit_History;  
-    static int id3;
-    std::vector<History> Pursuit_History; 
-public:
-    static double balance;  
-bool Manager::LogIn(){
-
-}
-
 void Manager::Show_Balance(){
     for (auto it = Malls.begin(); it != Malls.end(); it++) {
         cout<<it.Mall_name<<":"<<it->balance<<endl;
@@ -664,6 +802,7 @@ void Manager::Deposit(double amount) {
     balance -= amount;  
     cout << "成功取款 " << amount << " 元。" << endl;  
 }
+
 void Manager::Show_SpotSold_History(){
     for (const auto& mall : Malls) {  
             cout << mall.Mall_name << " 的购买热度点记录：" << endl;  
@@ -725,20 +864,17 @@ void Manager::Show_All(){
 double Manager::balance=0;
 int Manager::id3=177000000;
 
-//Food派生类实现
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-void Food::Show_Discount(){
-    for (auto it=Dish.begin(); i !=Dish.end(); i++) {
-        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
-        cout<<"折扣日期： "<<
-        cout << endl;
-    }
->>>>>>> 60390c39b75e480c818b3c403bdb1734baf1fe4d
-string Food::GetBrandName()
-{
+string Brand::Get_Brand_Name() {
     return Brand_Name;
+}
+
+//Food派生类实现
+void Food::Show_Discount() {
+    for (auto it = Dish.begin(); i != Dish.end(); i++) {
+        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout << "折扣日期： " <<
+            cout << endl;
+    }
 }
 
 void Food::Show_Dish(){
