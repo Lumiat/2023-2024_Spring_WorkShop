@@ -629,30 +629,64 @@ int Buyer::get_id2()
 }
 
 //Manager类实现
+class Manager:public User{
+private:
+    static vector<History> Deposit_History;  
+    static int id3;
+    std::vector<History> Pursuit_History; 
+public:
+    static double balance;  
 bool Manager::LogIn(){
 
 }
 
 void Manager::Show_Balance(){
     for (auto it = Malls.begin(); it != Malls.end(); it++) {
-        cout<<it.Mall_name
+        cout<<it.Mall_name<<":"<<it->balance<<endl;
     }
 }
 
-void Manager::Deposit(){
-
+void Manager::Deposit(double amount) {  
+    if (amount <= 0) {  
+        cout << "取款金额必须大于0！" << endl;  
+        return;  
+    }  
+  
+    if (amount > balance) {  
+        cout << "余额不足！" << endl;  
+        return;  
+    }  
+     time_t t = time(nullptr);
+    tm* now = localtime(&t);
+    char date[11]; 
+    strftime(date, sizeof(date), "%Y-%m-%d", now);
+  
+    balance -= amount;  
+    cout << "成功取款 " << amount << " 元。" << endl;  
 }
-
 void Manager::Show_SpotSold_History(){
-
+    for (const auto& mall : Malls) {  
+            cout << mall.Mall_name << " 的购买热度点记录：" << endl;  
+            for (const auto& history : mall.Pursuit_History) {  
+                cout << "购买点数: " << history.amount  
+                          << ", 时间: " << history.date << endl;  
+            }  
+            cout << endl;  
+        }  
 }
 
 void Manager::Show_Deposit_History(){
-
+    cout << "提款历史记录：" << endl;  
+    for (const auto& record : Deposit_History) {  
+            cout << "提款日期: " << record.date  
+                      << ", 提款金额: " << record.amount << endl;  
+        }  
+        std::cout << std::endl;  
+    }  
 }
 
 int Manager::get_id3(){
-
+    return id3;
 }
 
 void Manager::Trending(){
@@ -660,21 +694,36 @@ void Manager::Trending(){
 }
 
 void Manager::Show_Mall(){
-
+    cout << "商场列表：" << endl;  
+    for (int i = 0; i < 50; ++i) {  
+        for (const auto& mall : Malls[i]) {  
+            cout << mall << endl;  
+        }  
+    }  
 }
 
 void Manager::Show_Buyer(){
-
+   cout << "用户列表：" << endl;  
+    for (int i = 0; i < 50; ++i) {  
+        for (const auto& buyer : Buyers[i]) {  
+            cout << buyer << endl;  
+        }  
 }
 
 void Manager::Show_Manager(){
-
+   cout << "管理员列表：" << endl;  
+    for (const auto& manager : managers) { 
+        cout << manager << endl;  
+    }  
 }
 
 void Manager::Show_All(){
-
+    Show_Mall();  
+    Show_Buyer();  
+    Show_Manager();  
 }
-
+double Manager::balance=0;
+int Manager::id3=177000000;
 
 //Food派生类实现
 <<<<<<< HEAD
