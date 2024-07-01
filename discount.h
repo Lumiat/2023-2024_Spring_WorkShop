@@ -34,7 +34,7 @@ class User{
     void Change_Name();//更改用户名函数
     void Change_Password();//更改密码函数
 };
-.
+
 class Mall:public User
 {
 protected:
@@ -106,13 +106,13 @@ class Food:public Brand{
     private:
     vector<Commodity> Dish;     //餐厅具体折扣菜品
     public:
-    string GetDish 
+    string GetDish; 
     void Show_Dish();       //展示折扣菜品
     void Set_Dish();        //更改折扣菜品
     void Add_Dish();        //新增折扣菜品
     void Delete_Dish();     //删除折扣菜品
     void Show_Discount();   //纯虚函数，显示折扣信息
-    string GetBrandName() override;
+    string GetBrandName() const override;
 };
 
 class Wear:public Brand{
