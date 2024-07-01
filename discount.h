@@ -7,6 +7,11 @@
 #include<vector>
 #include<cmath>
 #include<ctime>
+#include <nlohmann/json.hpp>
+#include <iomanip>
+
+using json = nlohmann::json;
+using namespace std;
 
 struct History{
     string date;
@@ -29,8 +34,6 @@ class User{
     string PassWord;
     int id;
     public:
-    User();//构造函数负责构造新的用户，有合法性判断
-    ~User();
     virtual bool LogIn()=0;   //登录判断函数,包含交互内容,如果用户名和密码都匹配,返回true;
     void LogOut();  //注销账号函数,调用析构函数清除用户
     void Change_Name();//更改用户名函数
@@ -164,4 +167,9 @@ class Apperance:public Brand{
     string GetBrandName() const override;
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
 };
+
+void Register();
+bool check_passwd_validity(int passwd_len,string passwd);
+bool check_username_validity(string UserName);
+
 #endif
