@@ -1,0 +1,19 @@
+{
+  "malls": [
+    {
+      "username": "世豪广场",
+      "passwd": "Grace2024",
+      "id": 10900000,
+      "heat_spot": 0,
+      "heat_now": 0,
+      "pursue_history": [],
+      "rate": "待评价",
+      "shops": [
+        {
+          "brand_name": "Adidas",
+          "discount": "春装3件88折"
+        }
+      ]
+    }
+  ]
+}

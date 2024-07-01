@@ -1,59 +1,94 @@
 #include "discount.h"
-/*#include<iostream>
-#include<fstream>
-#include<string>
-#include<cmath>
-#include<algorithm>
-#include<vector>*/
-using namespace std;
 
+bool check_passwd_validity(int passwd_len, string passwd) {
+    bool upper = false;
+    bool lower = false;
+    bool number = false;
+    if (passwd_len < 8 || passwd_len>16) {
+        cout << "密码长度不合法！长度不超过16且不小于8" << endl;
+        cout << "请重新设置";
+        return false;
+    }
+    for (int i = 0; i < passwd_len; i++) {
+        if (passwd[i] >= 65 && passwd[i] <= 90)
+            upper = true;
+        if (passwd[i] >= 97 && passwd[i] <= 122)
+            lower = true;
+        if (passwd[i] >= 48 && passwd[i] <= 57)
+            number = true;
+        if (upper & lower & number) return true;
+    }
+        cout << "密码必须包含大小写字母和阿拉伯数字，请重新设置";
+    return false;
+}
+
+bool check_username_validity(string UserName) {
+    ifstream ifs("malls.json");
+    json data;
+    ifs >> data;
+    for (const auto& mall : data["malls"]) {
+        string name = mall["name"];
+        if (UserName == name) {
+            cout << "已有用户使用相同名称！请重试" << endl;
+            return false;
+        }
+    }
+    return true;
+}
 //User基类的函数实现
-User::User(){
+void Register(){
     /*注册（新建一个用户）时调用，函数包含注册时的交互信息
     注意判断新用户名与已有用户的用户名是否重合
     最后要获取UserName和PassWord这两个数据成员，并自动生成id*/
     /*目前缺少重名问题判断，等数据存储格式规定一起完成*/
     string passwd;
-    bool upper=false;
-    bool lower=false;
-    bool number=false;
     int passwd_len;
+    string UserName;
+    int choice;
     cout<<"探索独家优惠，从这里开始！";
+    cout << "请选择您的身份：1.我是商场方 2.我是购物者 3.我是平台管理员" << endl;
+    cin >> choice;
+    switch(choice){
+    case 1:
+NAME_AGAIN:
     cout<<"用户名：";
     cin>>UserName;
+    if(!check_username_validity(UserName))
+        goto NAME_AGAIN;
 PASSWORD_AGAIN:
     cout<<endl;
     cout<<"密码：";
     cin>>passwd;
     passwd_len=passwd.size();
-    if(passwd_len<8||passwd_len>16){
-        cout<<"密码长度不合法！长度不超过16且不小于8"<<endl;
-        cout<<"请重新设置";
+    if (!check_passwd_validity(passwd_len, passwd))
         goto PASSWORD_AGAIN;
-    } 
-    for(int i=0;i<passwd_len;i++){
-        if(passwd[i]>=65&&passwd[i]<=90)
-            upper=true;
-        if(passwd[i]>=97&&passwd[i]<=122)
-            lower=true;
-        if(passwd[i]>=48&&passwd[i]<=57)
-            number=true;
-        if(upper&lower&number) break;
-    }
-    if(!(upper&lower&number)){
-        cout<<"密码必须包含大小写字母和阿拉伯数字，请重新设置";
-        goto PASSWORD_AGAIN;
-    }
-    cout<<"密码设置成功"<<endl<<"注册成功，欢迎加入我们！";
+    cout << "密码设置成功" << endl;
+    json new_mall = {
+        {"username",UserName},
+        {"passwd",passwd},
+        {"id",10900001},
+        {"heat_spot",0},
+        {"heat_now",0},
+        {"pursue_history",json::array()},
+        {"rate","待评价"},
+        {"shops",json::array()}
+    };
+
+    // 将新商场成员添加到 "malls" 数组中
+    data["malls"].push_back(new_mall);
+
+    // 将更新后的 JSON 数据写入文件
+    ofstream ofs("malls.json");
+    ofs << setw(4) << data << std::endl;
+
+    cout<<"注册成功，欢迎加入我们！"<<endl;
 }
 
-User::~User(){
-    /*文件处理，从文件移除该对象的所有*/
-}
 
 bool User::LogIn(){
     /*判断用户名存在性--->判断密码与用户名的匹配
     匹配返回true，否则返回false，将尝试次数上限的逻辑在主函数交互完成*/
+
 }
 
 void User::LogOut(){
