@@ -1,6 +1,10 @@
 {
-  "user_name": "猫皮",
-  "passwd": "Lumiat2023",
-  "id": 19700000,
-  "foot_print": ["2023年01月23日 世豪广场"]
+  "buyers": [
+    {
+      "user_name": "猫皮",
+      "passwd": "Lumiat2023",
+      "id": 19700000,
+      "foot_print": ["2023年01月23日 世豪广场"]
+    }
+  ]
 }

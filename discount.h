@@ -13,6 +13,10 @@
 using json = nlohmann::json;
 using namespace std;
 
+fstream malls_data("I:/Discount_At_Your_Hand/Datas/Malls.json", ios::in | ios::out);
+fstream buyers_data("I:/Discount_At_Your_Hand/Datas/Buyers.json", ios::in | ios::out);
+fstream managers_data("I:/Discount_At_Your_Hand/Datas/Managers.json", ios::in | ios::out);
+
 struct History{
     string date;
     int amount;
@@ -34,8 +38,8 @@ class User{
     string PassWord;
     int id;
     public:
-    virtual bool LogIn()=0;   //登录判断函数,包含交互内容,如果用户名和密码都匹配,返回true;
-    void LogOut();  //注销账号函数,调用析构函数清除用户
+    bool LogIn(const fstream& ifs);//交互内容,如果用户名和密码都匹配,返回true;
+    void LogOut(fstream &iofs);  //注销账号函数,用析构函数清除用户
     void Change_Name();//更改用户名函数
     void Change_Password();//更改密码函数
 };
@@ -52,7 +56,9 @@ protected:
     string Mall_name;
 public:
     static int id1;
-    bool LogIn();
+    void LogOut();
+    void Change_Name();
+    void Change_Password();
     void Show_Advertise();  //显示所有折扣信息
     void Set_Advertise();   //更改折扣信息
     void Delete_Advertise();//删除折扣信息
@@ -73,6 +79,9 @@ protected:
 public:
     static int id2;
     bool LogIn();
+    void LogOut();
+    void Change_Name();
+    void Change_Password();
     void SearchItem();          //搜索特定商铺的折扣信息
     void Rating();              //买家有给商场评分的能力
     void Show_FootPrint();      //显示足迹（去过哪些商场）
@@ -87,6 +96,9 @@ private:
 public:
     static double balance;             //钱包
     bool LogIn();
+    void LogOut();
+    void Change_Name();
+    void Change_Password();
     static void Show_Balance();                //显示钱包总额
     static void Deposit();                     //提款
     void Show_SpotSold_History();       //显示销售热度点记录

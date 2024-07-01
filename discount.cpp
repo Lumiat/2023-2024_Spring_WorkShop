@@ -1,4 +1,6 @@
 #include "discount.h"
+#include<iostream>
+#include<fstream>
 
 bool check_passwd_validity(int passwd_len, string passwd) {
     bool upper = false;
@@ -23,11 +25,27 @@ bool check_passwd_validity(int passwd_len, string passwd) {
 }
 
 bool check_username_validity(string UserName) {
-    ifstream ifs("malls.json");
+    //ifstream ifs("I:/Discount_At_Your_Hand/Datas/Malls.json");
     json data;
-    ifs >> data;
+    malls_data >> data;
     for (const auto& mall : data["malls"]) {
-        string name = mall["name"];
+        string name = mall["username"];
+        if (UserName == name) {
+            cout << "已有用户使用相同名称！请重试" << endl;
+            return false;
+        }
+    }
+    buyers_data >> data;
+    for (const auto& buyer : data["buyers"]) {
+        string name =  buyer["username"];
+        if (UserName == name) {
+            cout << "已有用户使用相同名称！请重试" << endl;
+            return false;
+        }
+    }
+    managers_data >> data;
+    for (const auto& manager : data["managers"]) {
+        string name = manager["username"];
         if (UserName == name) {
             cout << "已有用户使用相同名称！请重试" << endl;
             return false;
@@ -48,54 +66,153 @@ void Register(){
     cout<<"探索独家优惠，从这里开始！";
     cout << "请选择您的身份：1.我是商场方 2.我是购物者 3.我是平台管理员" << endl;
     cin >> choice;
-    switch(choice){
+
+    switch (choice) {
     case 1:
-NAME_AGAIN:
-    cout<<"用户名：";
-    cin>>UserName;
-    if(!check_username_validity(UserName))
-        goto NAME_AGAIN;
-PASSWORD_AGAIN:
-    cout<<endl;
-    cout<<"密码：";
-    cin>>passwd;
-    passwd_len=passwd.size();
-    if (!check_passwd_validity(passwd_len, passwd))
-        goto PASSWORD_AGAIN;
-    cout << "密码设置成功" << endl;
-    json new_mall = {
-        {"username",UserName},
-        {"passwd",passwd},
-        {"id",10900001},
-        {"heat_spot",0},
-        {"heat_now",0},
-        {"pursue_history",json::array()},
-        {"rate","待评价"},
-        {"shops",json::array()}
-    };
+    NAME_AGAIN1:
+        cout << "商场名：";
+        cin >> UserName;
+        if (!check_username_validity(UserName))
+            goto NAME_AGAIN1;
+    PASSWORD_AGAIN1:
+        cout << endl;
+        cout << "密码：";
+        cin >> passwd;
+        passwd_len = passwd.size();
+        if (!check_passwd_validity(passwd_len, passwd))
+            goto PASSWORD_AGAIN1;
+        cout << "密码设置成功" << endl;
+        /*写入新的用户到Malls.json*/
+        json data;
+        malls_data >> data;
+        json new_mall = {
+            {"username",UserName},
+            {"passwd",passwd},
+            {"id",10900001},
+            {"heat_spot",0},
+            {"heat_now",0},
+            {"pursue_history",json::array()},
+            {"rate","待评价"},
+            {"shops",json::array()}
+        };
 
-    // 将新商场成员添加到 "malls" 数组中
-    data["malls"].push_back(new_mall);
+        // 将新商场成员添加到 "malls" 数组中
+        data["malls"].push_back(new_mall);
 
-    // 将更新后的 JSON 数据写入文件
-    ofstream ofs("malls.json");
-    ofs << setw(4) << data << std::endl;
+        // 将更新后的 JSON 数据写入文件
+        malls_data << setw(4) << data << std::endl;
+        break;
+    case 2:
+    NAME_AGAIN2:
+        cout << "用户名：";
+        cin >> UserName;
+        if (!check_username_validity(UserName))
+            goto NAME_AGAIN2;
+    PASSWORD_AGAIN2:
+        cout << endl;
+        cout << "密码：";
+        cin >> passwd;
+        passwd_len = passwd.size();
+        if (!check_passwd_validity(passwd_len, passwd))
+            goto PASSWORD_AGAIN2;
+        cout << "密码设置成功" << endl;
+        /*写入新的用户到Malls.json*/
+        json data;
+        buyers_data >> data;
+        json new_buyer = {
+            {"username",UserName},
+            {"passwd",passwd},
+            {"id",19700001},
+            {"foot_print",json::array()}
+        };
 
-    cout<<"注册成功，欢迎加入我们！"<<endl;
+        // 将新商场成员添加到 "malls" 数组中
+        data["buyers"].push_back(new_buyer);
+
+        // 将更新后的 JSON 数据写入文件
+        buyers_data << setw(4) << data << endl;
+        break;
+    case 3:
+    NAME_AGAIN3:
+        cout << "用户名：";
+        cin >> UserName;
+        if (!check_username_validity(UserName))
+            goto NAME_AGAIN3;
+    PASSWORD_AGAIN3:
+        cout << endl;
+        cout << "密码：";
+        cin >> passwd;
+        passwd_len = passwd.size();
+        if (!check_passwd_validity(passwd_len, passwd))
+            goto PASSWORD_AGAIN3;
+        cout << "密码设置成功" << endl;
+        /*写入新的用户到Malls.json*/
+        json data;
+        managers_data >> data;
+        json new_manager = {
+            {"username",UserName},
+            {"passwd",passwd},
+            {"id",19700001},
+            {"diposit_history",json::array()}
+        };
+
+        // 将新商场成员添加到 "malls" 数组中
+        data["managers"].push_back(new_manager);
+
+        // 将更新后的 JSON 数据写入文件
+        managers_data << setw(4) << data << endl;
+        break;
+    }
+        cout << "注册成功，欢迎加入我们！" << endl;
 }
 
-
-bool User::LogIn(){
+/*只用读取外存文件*/
+bool User::LogIn(const fstream &ifs)
+{
     /*判断用户名存在性--->判断密码与用户名的匹配
     匹配返回true，否则返回false，将尝试次数上限的逻辑在主函数交互完成*/
+    json data;
+    ifs >> data;
+    string UserName;
+    string passwd;
+    string supposed_passwd;
+    string master_key = data.begin().key();
+    int name_try=0;
+    int pin_try = 0;
+    bool flag = false;
 
+TRY_NAME_AGAIN:
+    if (name_try == 3) return false;
+    cout << "用户名：";
+    cin >> UserName;
+    
+    for (const auto& kind : data[master_key]) {
+        string name = kind.at("username");
+        if (UserName == name) {
+            supposed_passwd = kind.at("passwd");
+            flag = true;
+            break;
+        }
+    }
+    if (!flag) {
+        cout << "该用户不存在！";
+        name_try++;
+        goto TRY_NAME_AGAIN;
+    }
+TRY_PASSWD_AGAIN:
+    if (pin_try == 3) return false;
+    cout << endl << "密码：";
+    cin >> passwd;
+    if (passwd != supposed_passwd) {
+        cout << "密码错误！请重新输入";
+        pin_try++;
+        goto TRY_PASSWD_AGAIN;
+    }
+    return true;
 }
 
-void User::LogOut(){
-
-}
-
-void User::Change_Name(){
+/*先验证身份再更改*/
+void User::Change_Name(fstream &iofs){
 
 }
 
@@ -104,9 +221,8 @@ void User::Change_Password(){
 }
 
 //Mall派生类实现
-bool Mall::LogIn()
-{
-    
+void Mall::LogOut() {
+
 }
 
 void Mall::Show_Advertise()
