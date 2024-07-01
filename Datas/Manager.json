@@ -1,0 +1,10 @@
+{
+  "managers": [
+    {
+      "user_name": "投资人1",
+      "passwd": "Interest123",
+      "id": 1770000,
+      "deposit_history": ["2023年01月23日提款1000元"]
+    }
+  ]
+}

@@ -1,66 +1,218 @@
 #include "discount.h"
-/*#include<iostream>
+#include<iostream>
 #include<fstream>
-#include<string>
-#include<cmath>
-#include<algorithm>
-#include<vector>*/
-using namespace std;
 
+bool check_passwd_validity(int passwd_len, string passwd) {
+    bool upper = false;
+    bool lower = false;
+    bool number = false;
+    if (passwd_len < 8 || passwd_len>16) {
+        cout << "密码长度不合法！长度不超过16且不小于8" << endl;
+        cout << "请重新设置";
+        return false;
+    }
+    for (int i = 0; i < passwd_len; i++) {
+        if (passwd[i] >= 65 && passwd[i] <= 90)
+            upper = true;
+        if (passwd[i] >= 97 && passwd[i] <= 122)
+            lower = true;
+        if (passwd[i] >= 48 && passwd[i] <= 57)
+            number = true;
+        if (upper & lower & number) return true;
+    }
+        cout << "密码必须包含大小写字母和阿拉伯数字，请重新设置";
+    return false;
+}
+
+bool check_username_validity(string UserName) {
+    //ifstream ifs("I:/Discount_At_Your_Hand/Datas/Malls.json");
+    json data;
+    malls_data >> data;
+    for (const auto& mall : data["malls"]) {
+        string name = mall["username"];
+        if (UserName == name) {
+            cout << "已有用户使用相同名称！请重试" << endl;
+            return false;
+        }
+    }
+    buyers_data >> data;
+    for (const auto& buyer : data["buyers"]) {
+        string name =  buyer["username"];
+        if (UserName == name) {
+            cout << "已有用户使用相同名称！请重试" << endl;
+            return false;
+        }
+    }
+    managers_data >> data;
+    for (const auto& manager : data["managers"]) {
+        string name = manager["username"];
+        if (UserName == name) {
+            cout << "已有用户使用相同名称！请重试" << endl;
+            return false;
+        }
+    }
+    return true;
+}
 //User基类的函数实现
-User::User(){
+void Register(){
     /*注册（新建一个用户）时调用，函数包含注册时的交互信息
     注意判断新用户名与已有用户的用户名是否重合
     最后要获取UserName和PassWord这两个数据成员，并自动生成id*/
     /*目前缺少重名问题判断，等数据存储格式规定一起完成*/
     string passwd;
-    bool upper=false;
-    bool lower=false;
-    bool number=false;
     int passwd_len;
+    string UserName;
+    int choice;
     cout<<"探索独家优惠，从这里开始！";
-    cout<<"用户名：";
-    cin>>UserName;
-PASSWORD_AGAIN:
-    cout<<endl;
-    cout<<"密码：";
-    cin>>passwd;
-    passwd_len=passwd.size();
-    if(passwd_len<8||passwd_len>16){
-        cout<<"密码长度不合法！长度不超过16且不小于8"<<endl;
-        cout<<"请重新设置";
-        goto PASSWORD_AGAIN;
-    } 
-    for(int i=0;i<passwd_len;i++){
-        if(passwd[i]>=65&&passwd[i]<=90)
-            upper=true;
-        if(passwd[i]>=97&&passwd[i]<=122)
-            lower=true;
-        if(passwd[i]>=48&&passwd[i]<=57)
-            number=true;
-        if(upper&lower&number) break;
+    cout << "请选择您的身份：1.我是商场方 2.我是购物者 3.我是平台管理员" << endl;
+    cin >> choice;
+
+    switch (choice) {
+    case 1:
+    NAME_AGAIN1:
+        cout << "商场名：";
+        cin >> UserName;
+        if (!check_username_validity(UserName))
+            goto NAME_AGAIN1;
+    PASSWORD_AGAIN1:
+        cout << endl;
+        cout << "密码：";
+        cin >> passwd;
+        passwd_len = passwd.size();
+        if (!check_passwd_validity(passwd_len, passwd))
+            goto PASSWORD_AGAIN1;
+        cout << "密码设置成功" << endl;
+        /*写入新的用户到Malls.json*/
+        json data;
+        malls_data >> data;
+        json new_mall = {
+            {"username",UserName},
+            {"passwd",passwd},
+            {"id",10900001},
+            {"heat_spot",0},
+            {"heat_now",0},
+            {"pursue_history",json::array()},
+            {"rate","待评价"},
+            {"shops",json::array()}
+        };
+
+        // 将新商场成员添加到 "malls" 数组中
+        data["malls"].push_back(new_mall);
+
+        // 将更新后的 JSON 数据写入文件
+        malls_data << setw(4) << data << std::endl;
+        break;
+    case 2:
+    NAME_AGAIN2:
+        cout << "用户名：";
+        cin >> UserName;
+        if (!check_username_validity(UserName))
+            goto NAME_AGAIN2;
+    PASSWORD_AGAIN2:
+        cout << endl;
+        cout << "密码：";
+        cin >> passwd;
+        passwd_len = passwd.size();
+        if (!check_passwd_validity(passwd_len, passwd))
+            goto PASSWORD_AGAIN2;
+        cout << "密码设置成功" << endl;
+        /*写入新的用户到Malls.json*/
+        json data;
+        buyers_data >> data;
+        json new_buyer = {
+            {"username",UserName},
+            {"passwd",passwd},
+            {"id",19700001},
+            {"foot_print",json::array()}
+        };
+
+        // 将新商场成员添加到 "malls" 数组中
+        data["buyers"].push_back(new_buyer);
+
+        // 将更新后的 JSON 数据写入文件
+        buyers_data << setw(4) << data << endl;
+        break;
+    case 3:
+    NAME_AGAIN3:
+        cout << "用户名：";
+        cin >> UserName;
+        if (!check_username_validity(UserName))
+            goto NAME_AGAIN3;
+    PASSWORD_AGAIN3:
+        cout << endl;
+        cout << "密码：";
+        cin >> passwd;
+        passwd_len = passwd.size();
+        if (!check_passwd_validity(passwd_len, passwd))
+            goto PASSWORD_AGAIN3;
+        cout << "密码设置成功" << endl;
+        /*写入新的用户到Malls.json*/
+        json data;
+        managers_data >> data;
+        json new_manager = {
+            {"username",UserName},
+            {"passwd",passwd},
+            {"id",19700001},
+            {"diposit_history",json::array()}
+        };
+
+        // 将新商场成员添加到 "malls" 数组中
+        data["managers"].push_back(new_manager);
+
+        // 将更新后的 JSON 数据写入文件
+        managers_data << setw(4) << data << endl;
+        break;
     }
-    if(!(upper&lower&number)){
-        cout<<"密码必须包含大小写字母和阿拉伯数字，请重新设置";
-        goto PASSWORD_AGAIN;
-    }
-    cout<<"密码设置成功"<<endl<<"注册成功，欢迎加入我们！";
+        cout << "注册成功，欢迎加入我们！" << endl;
 }
 
-User::~User(){
-    /*文件处理，从文件移除该对象的所有*/
-}
-
-bool User::LogIn(){
+/*只用读取外存文件*/
+bool User::LogIn(const fstream &ifs)
+{
     /*判断用户名存在性--->判断密码与用户名的匹配
     匹配返回true，否则返回false，将尝试次数上限的逻辑在主函数交互完成*/
+    json data;
+    ifs >> data;
+    string UserName;
+    string passwd;
+    string supposed_passwd;
+    string master_key = data.begin().key();
+    int name_try=0;
+    int pin_try = 0;
+    bool flag = false;
+
+TRY_NAME_AGAIN:
+    if (name_try == 3) return false;
+    cout << "用户名：";
+    cin >> UserName;
+    
+    for (const auto& kind : data[master_key]) {
+        string name = kind.at("username");
+        if (UserName == name) {
+            supposed_passwd = kind.at("passwd");
+            flag = true;
+            break;
+        }
+    }
+    if (!flag) {
+        cout << "该用户不存在！";
+        name_try++;
+        goto TRY_NAME_AGAIN;
+    }
+TRY_PASSWD_AGAIN:
+    if (pin_try == 3) return false;
+    cout << endl << "密码：";
+    cin >> passwd;
+    if (passwd != supposed_passwd) {
+        cout << "密码错误！请重新输入";
+        pin_try++;
+        goto TRY_PASSWD_AGAIN;
+    }
+    return true;
 }
 
-void User::LogOut(){
-
-}
-
-void User::Change_Name(){
+/*先验证身份再更改*/
+void User::Change_Name(fstream &iofs){
 
 }
 
@@ -69,8 +221,8 @@ void User::Change_Password(){
 }
 
 //Mall派生类实现
-bool Mall::LogIn(){
-    
+void Mall::LogOut() {
+
 }
 
 void Mall::Show_Advertise()
@@ -383,9 +535,22 @@ void Mall::Show_Pursue_History()
     }
 }
 
+void Mall::Update_Rate(double newRating)
+{
+    double totalRating = Rate * RatePeo;
+    totalRating += newRating;
+    RatePeo++;
+    Rate = double(totalRating / RatePeo);
+}
+
 int Mall::get_id1()
 {
     return id1;
+}
+
+string Mall::GetMallName()
+{
+    return  Mall_name;
 }
 
 //Buyer派生类实现
@@ -393,47 +558,135 @@ bool Buyer::LogIn(){
 
 }
 
-void Buyer::SearchItem(){
-
+void Buyer::SearchItem()
+{
+    string BrandName;
+    cout << "请输入您想要查询的店铺： ";
+    cin >> BrandName;
+    for (const auto& mall : Malls) {
+        for (const auto& shop : mall.Shops) {
+            if (shop->GetBrandName() == brandName) {
+                shop->Show_Discount();
+                FootPrint.push_back(BrandName);
+                return;
+            }
+        }
+    }
+    cout << "非常抱歉，未查询到该店铺的信息。" << endl;
 }
 
-void Buyer::Rating(){
+void Buyer::Rating()
+{
+    string mallName;
+    double rating;
+    cout << "请输入您想要评分的商场：";
+    cin >> mallName;
+    cout << "请输入评分 (0.0 - 5.0)：";
+    cin >> rating;
+    if (rating < 0.0 || rating > 5.0) {
+        cout << "评分无效，请输入 0.0 到 5.0 之间的数值。" << endl;
+        return;
+    }
 
+    for (auto& mall : Malls) {
+        if (mall.GetMallName() == mallName) {
+            mall.UpdateRate(rating);
+            cout << "评分已提交。" << endl;
+            return;
+        }
+    }
+    cout << "未找到指定的商场。" << endl;
 }
 
-void Buyer::Show_FootPrint(){
-
+void Buyer::Show_FootPrint()
+{
+    cout << "您浏览过的店铺：" << endl;
+    for (const auto& brandName : FootPrint) 
+    {
+        bool found = false;
+        for (const auto& mall : Malls) 
+        {
+            for (const auto& shop : mall.Shops) 
+            {
+                if (shop->GetBrandName() == brandName)
+                {
+                    shop->Show_Discount();
+                    found = true;
+                    break;
+                }
+            }
+            if (found) break;
+        }
+        if (!found) {
+            cout << "商铺 " << brandName << " 当前没有活动。" << endl;
+        }
+    }
 }
 
-int Buyer::get_id2(){
-
+int Buyer::get_id2()
+{
+    return id2;
 }
 
 //Manager类实现
+class Manager:public User{
+private:
+    static vector<History> Deposit_History;  
+    static int id3;
+    std::vector<History> Pursuit_History; 
+public:
+    static double balance;  
 bool Manager::LogIn(){
 
 }
 
 void Manager::Show_Balance(){
     for (auto it = Malls.begin(); it != Malls.end(); it++) {
-        cout<<it.Mall_name
+        cout<<it.Mall_name<<":"<<it->balance<<endl;
     }
 }
 
-void Manager::Deposit(){
-
+void Manager::Deposit(double amount) {  
+    if (amount <= 0) {  
+        cout << "取款金额必须大于0！" << endl;  
+        return;  
+    }  
+  
+    if (amount > balance) {  
+        cout << "余额不足！" << endl;  
+        return;  
+    }  
+     time_t t = time(nullptr);
+    tm* now = localtime(&t);
+    char date[11]; 
+    strftime(date, sizeof(date), "%Y-%m-%d", now);
+  
+    balance -= amount;  
+    cout << "成功取款 " << amount << " 元。" << endl;  
 }
-
 void Manager::Show_SpotSold_History(){
-
+    for (const auto& mall : Malls) {  
+            cout << mall.Mall_name << " 的购买热度点记录：" << endl;  
+            for (const auto& history : mall.Pursuit_History) {  
+                cout << "购买点数: " << history.amount  
+                          << ", 时间: " << history.date << endl;  
+            }  
+            cout << endl;  
+        }  
 }
 
 void Manager::Show_Deposit_History(){
-
+    cout << "提款历史记录：" << endl;  
+    for (const auto& record : Deposit_History) {  
+            cout << "提款日期: " << record.date  
+                      << ", 提款金额: " << record.amount << endl;  
+        }  
+        std::cout << std::endl;  
+    }  
 }
 
 int Manager::get_id3(){
-
+    return id3;
 }
 
 void Manager::Trending(){
@@ -441,21 +694,36 @@ void Manager::Trending(){
 }
 
 void Manager::Show_Mall(){
-
+    cout << "商场列表：" << endl;  
+    for (int i = 0; i < 50; ++i) {  
+        for (const auto& mall : Malls[i]) {  
+            cout << mall << endl;  
+        }  
+    }  
 }
 
 void Manager::Show_Buyer(){
-
+   cout << "用户列表：" << endl;  
+    for (int i = 0; i < 50; ++i) {  
+        for (const auto& buyer : Buyers[i]) {  
+            cout << buyer << endl;  
+        }  
 }
 
 void Manager::Show_Manager(){
-
+   cout << "管理员列表：" << endl;  
+    for (const auto& manager : managers) { 
+        cout << manager << endl;  
+    }  
 }
 
 void Manager::Show_All(){
-
+    Show_Mall();  
+    Show_Buyer();  
+    Show_Manager();  
 }
-
+double Manager::balance=0;
+int Manager::id3=177000000;
 
 //Food派生类实现
 
@@ -465,10 +733,24 @@ void Food::Show_Discount(){
         cout << "折扣日期： " << Start_Date << "-" << End_Date;
         cout << endl;
     }
+
 string Food::GetBrandName()
 {
     return Brand_Name;
 }
+
+void Food::Show_Dish(){
+
+void Food::Show_Discount(){
+    for (auto it=Dish.begin(); i !=Dish.end(); i++) {
+        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout<<"折扣日期： "<<
+        cout << endl;
+    }
+
+}
+
+
 void Food::Set_Dish(){
     cout << "请输入您想要设置的商品名称： "；
     string what_tem;
@@ -521,17 +803,25 @@ void Food::Delete_Dish(){
 
 
 //Wear派生类实现
-
 void Wear::Show_Discount() {
     for (auto it = Clothing.begin(); i != Clothing.end(); i++) {
         cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
         cout << "折扣日期： " << Start_Date << "-" << End_Date;
         cout << endl;
     }
-=======
+}
 string Wear::GetBrandName()
 {
     return Brand_Name;
+}
+
+
+void Wear::Show_Discount() {
+    for (auto it = Clothing.begin(); i != Clothing.end(); i++) {
+        cout << "商品名称： " << it.what << "; 折扣： " << it.discount_message;
+        cout << endl;
+    }
+
 }
 
 
@@ -647,31 +937,14 @@ private:
     string discountInformation; 
     vector<ServiceItem> services;  
 
+
 string Apperance::GetBrandName()
 {
     return Brand_Name;
 }
 
-void Apperance::Show_Service(){
-
-}
-
-void Apperance::Set_Service(){
-
-}
-
-void Apperance::Add_Service(){
-
-}
-
-void Apperance::Delete_Service(){
-
-}
-
-void Apperance::Show_Discount(){
 
     
-public:
 void Appearance::Show_Service(){
     for (const auto& ServiceItem : services) {  
             cout << service << endl;  
@@ -697,5 +970,4 @@ void Appearance::Delete_Service(const string& grocery){
 
 void Appearance::Show_Discount(){
     cout << "折扣为：" << discountInformation<< endl;
-}
 }
