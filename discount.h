@@ -36,7 +36,7 @@ class User{
     void Change_Name();//更改用户名函数
     void Change_Password();//更改密码函数
 };
-.
+
 class Mall:public User
 {
 protected:
@@ -46,12 +46,9 @@ protected:
     string Rate;    //商场评分
     vector<Brand*> Shops;   //所有有折扣商铺
     static int id1;
-<<<<<<< HEAD
+
     string Mall_name;
     public:
-=======
-public:
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
     bool LogIn();
     void Show_Advertise();  //显示所有折扣信息
     void Set_Advertise();   //更改折扣信息
@@ -108,34 +105,24 @@ class Brand{
     string what_tem;
     string discount_tem;
     public:
-<<<<<<< HEAD
-    virtual void Show_Discount() const=0;   //纯虚函数，显示折扣信息
     virtual void set_Date(string start_Date, string end_Date);
-=======
     virtual void Show_Discount() const=0; //纯虚函数，显示折扣信息
     virtual string GetBrandName() const=0;
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
 };
 
 class Food:public Brand{
     protected:
     vector<Commodity> Dish;     //餐厅具体折扣菜品
     public:
-<<<<<<< HEAD
     Food(string);
-=======
-    string GetDish 
+    string GetDish; 
     void Show_Dish();       //展示折扣菜品
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
     void Set_Dish();        //更改折扣菜品
     void Add_Dish();        //新增折扣菜品
     void Delete_Dish();     //删除折扣菜品
     void Show_Discount();   //纯虚函数，显示折扣信息
-<<<<<<< HEAD
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
-=======
-    string GetBrandName() override;
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
+    string GetBrandName() const override;
 };
 
 class Wear:public Brand{
@@ -146,11 +133,8 @@ class Wear:public Brand{
     void Add_Clothing();    //新增折扣服饰
     void Delete_Clothing();     //删除折扣服饰
     void Show_Discount();   //纯虚函数，显示折扣信息
-<<<<<<< HEAD
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
-=======
     string GetBrandName() const override;
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
 };
 
 class Market:public Brand{
@@ -162,11 +146,8 @@ class Market:public Brand{
     void Add_Groceries();       //新增折扣百货
     void Delete_Groceries();    //删除折扣百货
     void Show_Discount();   //纯虚函数，显示折扣信息
-<<<<<<< HEAD
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
-=======
     string GetBrandName() const override;
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
 };
 
 class Apperance:public Brand{
@@ -178,10 +159,7 @@ class Apperance:public Brand{
     void Add_Service();         //新增折扣服务
     void Delete_Service();      //删除折扣服务
     void Show_Discount();   //纯虚函数，显示折扣信息
-<<<<<<< HEAD
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
-=======
     string GetBrandName() const override;
->>>>>>> 180e3dc24282379b3fe016ca82f350360e89fc8c
 };
 #endif
