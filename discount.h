@@ -20,6 +20,8 @@ struct Commodity{
 };
 
 class Brand;
+vector<Mall> Malls[50];
+vector<Buyer> Buyers[50];
 
 class User{
     protected:
@@ -44,7 +46,9 @@ protected:
     string Rate;    //商场评分
     vector<Brand*> Shops;   //所有有折扣商铺
     static int id1;
-public:
+
+    string Mall_name;
+    public:
     bool LogIn();
     void Show_Advertise();  //显示所有折扣信息
     void Set_Advertise();   //更改折扣信息
@@ -54,6 +58,7 @@ public:
     void Show_Rate();       //显示评分
     void Show_Pursue_History();    //显示购买记录
     static int get_id1();
+    friend class manager;
 };
 int Mall::id1=10900000;
 
@@ -97,38 +102,43 @@ class Brand{
     string Brand_Name;  //店名
     int Start_Date;     //折扣开始日期
     int End_Date;       //折扣结束日期
+    string what_tem;
+    string discount_tem;
     public:
+    virtual void set_Date(string start_Date, string end_Date);
     virtual void Show_Discount() const=0; //纯虚函数，显示折扣信息
     virtual string GetBrandName() const=0;
 };
 
 class Food:public Brand{
-    private:
+    protected:
     vector<Commodity> Dish;     //餐厅具体折扣菜品
     public:
+    Food(string);
     string GetDish; 
     void Show_Dish();       //展示折扣菜品
     void Set_Dish();        //更改折扣菜品
     void Add_Dish();        //新增折扣菜品
     void Delete_Dish();     //删除折扣菜品
     void Show_Discount();   //纯虚函数，显示折扣信息
+    void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
     string GetBrandName() const override;
 };
 
 class Wear:public Brand{
-    private:
+    protected:
     vector<Commodity> Clothing; //服装店具体折扣服饰
     public:
-    void Show_Clothing();   //展示折扣服饰
     void Set_Clothing();    //更改折扣服饰
     void Add_Clothing();    //新增折扣服饰
     void Delete_Clothing();     //删除折扣服饰
     void Show_Discount();   //纯虚函数，显示折扣信息
+    void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
     string GetBrandName() const override;
 };
 
 class Market:public Brand{
-    private:
+    protected:
     vector<Commodity> Groceries;//超市具体折扣百货
     public:
     void Show_Groceries();      //展示折扣百货
@@ -136,11 +146,12 @@ class Market:public Brand{
     void Add_Groceries();       //新增折扣百货
     void Delete_Groceries();    //删除折扣百货
     void Show_Discount();   //纯虚函数，显示折扣信息
+    void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
     string GetBrandName() const override;
 };
 
 class Apperance:public Brand{
-    private:
+    protected:
     vector<Commodity> Service;  //形象管理具体折扣服务
     public:
     void Show_Service();        //展示折扣服务
@@ -148,6 +159,7 @@ class Apperance:public Brand{
     void Add_Service();         //新增折扣服务
     void Delete_Service();      //删除折扣服务
     void Show_Discount();   //纯虚函数，显示折扣信息
+    void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
     string GetBrandName() const override;
 };
 #endif
