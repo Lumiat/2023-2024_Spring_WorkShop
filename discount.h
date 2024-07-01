@@ -100,8 +100,8 @@ class Brand{
     protected:
     string Kind;        //店铺所属类别：美食、服装配饰、生活超市、形象管理
     string Brand_Name;  //店名
-    int Start_Date;     //折扣开始日期
-    int End_Date;       //折扣结束日期
+    string Start_Date;     //折扣开始日期
+    string End_Date;       //折扣结束日期
     string what_tem;
     string discount_tem;
     public:
