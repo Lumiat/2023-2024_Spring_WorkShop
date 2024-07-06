@@ -37,10 +37,23 @@ class User{
     string PassWord;
     int id;
     public:
+<<<<<<< HEAD
+    bool LogIn(fstream &ifs);//交互内容,如果用户名和密码都匹配,返回true;
+    void LogOut(fstream &iofs,const string& logged_name);  //注销账号函数,用析构函数清除用户
+    void Change_Name(fstream &iofs,const string& old_name);//更改用户名函数
+    void Change_Password(fstream &iofs,const string &logged_name);//更改密码函数
+=======
     bool LogIn(const fstream& ifs);//交互内容,如果用户名和密码都匹配,返回true;
     void LogOut(fstream& iofs, const string& logged_name);  //注销账号函数,用析构函数清除用户
     void Change_Name(fstream& iofs, const string& old_name);//输入内容（传参）：已知已经登陆的用户的身份（可以确定三种用户类型之一和原来用户名）iofs对象选择就根据用户类型选择对应全局变量即可
     void Change_Password(fstream& iofs, const string& logged_name);//输入内容（传参）：已知已经登陆的用户的身份（可以确定三种用户类型之一和用户名）
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> GoldFish
+=======
+>>>>>>> GoldFish
+>>>>>>> 38269fdfe652635d031c98e0f3bcc42eb0035dd1
 };
 
 class Mall:public User
@@ -55,9 +68,6 @@ protected:
     string Mall_name;
 public:
     static int id1;
-    void LogOut();
-    void Change_Name();
-    void Change_Password();
     void Show_Advertise();  //显示所有折扣信息
     void Set_Advertise();   //更改折扣信息
     void Delete_Advertise();//删除折扣信息
@@ -78,10 +88,6 @@ protected:
     vector<string> FootPrint;   //显示买家足迹
 public:
     static int id2;
-    bool LogIn();
-    void LogOut();
-    void Change_Name();
-    void Change_Password();
     void SearchItem();          //搜索特定商铺的折扣信息
     void Rating();              //买家有给商场评分的能力
     void Show_FootPrint();      //显示足迹（去过哪些商场）
@@ -95,10 +101,6 @@ private:
     static int id3;
 public:
     static double balance;             //钱包
-    bool LogIn();
-    void LogOut();
-    void Change_Name();
-    void Change_Password();
     static void Show_Balance();                //显示钱包总额
     static void Deposit();                     //提款
     void Show_SpotSold_History();       //显示销售热度点记录
@@ -117,12 +119,12 @@ class Brand{
     protected:
     string Kind;        //店铺所属类别：美食、服装配饰、生活超市、形象管理
     string Brand_Name;  //店名
-    int Start_Date;     //折扣开始日期
-    int End_Date;       //折扣结束日期
+    string Start_Date;     //折扣开始日期
+    string End_Date;       //折扣结束日期
     string what_tem;
     string discount_tem;
     public:
-    virtual string GetBrandName() const=0;
+    string Get_Brand_Name();
     virtual void Show_Discount() const=0;   //纯虚函数，显示折扣信息
     virtual void set_Date(string start_Date, string end_Date) const = 0;
 };
@@ -139,7 +141,6 @@ class Food:public Brand{
     void Delete_Dish();     //删除折扣菜品
     void Show_Discount();   //纯虚函数，显示折扣信息
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
-    string GetBrandName() const override;
 };
 
 class Wear:public Brand{
@@ -150,7 +151,6 @@ class Wear:public Brand{
     void Add_Clothing();    //新增折扣服饰
     void Delete_Clothing();     //删除折扣服饰
     void Show_Discount();   //纯虚函数，显示折扣信息
-    string GetBrandName() const override;
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
 };
 
@@ -163,7 +163,6 @@ class Market:public Brand{
     void Add_Groceries();       //新增折扣百货
     void Delete_Groceries();    //删除折扣百货
     void Show_Discount();   //纯虚函数，显示折扣信息
-    string GetBrandName() const override;
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
 };
 
@@ -176,7 +175,6 @@ class Apperance:public Brand{
     void Add_Service();         //新增折扣服务
     void Delete_Service();      //删除折扣服务
     void Show_Discount();   //纯虚函数，显示折扣信息
-    string GetBrandName() const override;
     void set_Date(string start_Date, string end_Date);//纯虚函数，显示折扣日期
 };
 
