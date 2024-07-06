@@ -47,6 +47,9 @@ class User{
     void LogOut(fstream& iofs, const string& logged_name);  //注销账号函数,用析构函数清除用户
     void Change_Name(fstream& iofs, const string& old_name);//输入内容（传参）：已知已经登陆的用户的身份（可以确定三种用户类型之一和原来用户名）iofs对象选择就根据用户类型选择对应全局变量即可
     void Change_Password(fstream& iofs, const string& logged_name);//输入内容（传参）：已知已经登陆的用户的身份（可以确定三种用户类型之一和用户名）
+<<<<<<< HEAD
+>>>>>>> GoldFish
+=======
 >>>>>>> GoldFish
 };
 
