@@ -57,6 +57,30 @@ bool check_username_validity(string UserName) {
     return true;
 }
 
+void input_mall_vct() {
+    if (!malls_data.is_open()) {
+        cout << "未能打开文件" << endl;
+    }
+    json data;
+    malls_data >> data;
+    malls_data.close();
+    for (const auto& mall_data : data["malls"]) {
+        Mall mall;
+        mall.UserName = mall_data["username"];
+        mall.PassWord = mall_data["passwd"];
+        mall.id = mall_data["id"];
+        mall.Heat_Spot = mall_data["heatspot"];
+        mall.Heat_Now = mall_data["heatnow"];
+
+
+
+    }
+
+}
+
+void output_mall_vct() {
+
+}
 //User基类的函数实现
 void Register(){
     /*注册（新建一个用户）时调用，函数包含注册时的交互信息
@@ -258,6 +282,50 @@ TRY_PASSWD_AGAIN:
         goto TRY_PASSWD_AGAIN;
     }
     return true;
+}
+
+void User::LogOut(fstream& iofs, const string& logged_name) {
+    string passwd;
+    bool flag = false;
+    json data;
+    iofs >> data;
+    string master_key = data.begin().key();
+    cout << "身份认证" << endl;
+    cout << "请输入密码：";
+    cin >> passwd;
+
+    json data;
+    iofs >> data;
+    string master_key = data.begin().key();
+
+    // 查找用户名与密码匹配的用户
+    for (auto it = data[master_key].begin(); it != data[master_key].end(); ++it) {
+        if ((*it)["username"] == logged_name && (*it)["passwd"] == passwd) {
+            flag = true;
+
+            // 确认注销
+            int choice;
+            cout << "确认注销：1.是 2.否" << endl;
+            cin >> choice;
+            if (choice == 1) {
+                // 从JSON数组中删除用户
+                it = data[master_key].erase(it);
+                cout << "用户已注销" << endl;
+            }
+            else {
+                cout << "取消注销操作" << endl;
+            }
+            break;
+        }
+    }
+
+    if (!flag)
+        cout << "用户名或密码错误，身份认证失败" << endl;
+
+
+    // 将更新后的 JSON 数据写入文件
+    iofs.seekp(0);  // 将写入位置移动到文件开头
+    iofs << setw(4) << data << endl;
 }
 
 /*先验证身份再更改*/

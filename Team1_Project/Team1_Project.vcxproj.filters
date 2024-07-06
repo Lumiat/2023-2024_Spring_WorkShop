@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\discount.cpp">
+    <ClCompile Include="test_json.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="test_json.cpp">
+    <ClCompile Include="..\discount.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
