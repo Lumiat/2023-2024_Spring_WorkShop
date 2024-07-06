@@ -1,5 +1,5 @@
-#ifndef _DISCOUNT_H_
-#define _DISCOUNT_H_
+#ifndef _DISCOUNT_H
+#define _DISCOUNT_H
 #include<iostream>
 #include<string>
 #include<algorithm>
@@ -9,9 +9,8 @@
 #include<ctime>
 #include <nlohmann/json.hpp>
 #include <iomanip>
-
-using json = nlohmann::json;
 using namespace std;
+using json = nlohmann::json;
 
 fstream malls_data("I:/Discount_At_Your_Hand/Datas/Malls.json", ios::in | ios::out);
 fstream buyers_data("I:/Discount_At_Your_Hand/Datas/Buyers.json", ios::in | ios::out);
@@ -39,16 +38,16 @@ class User{
     int id;
     public:
     bool LogIn(const fstream& ifs);//交互内容,如果用户名和密码都匹配,返回true;
-    void LogOut(fstream &iofs);  //注销账号函数,用析构函数清除用户
-    void Change_Name();//更改用户名函数
-    void Change_Password();//更改密码函数
+    void LogOut(fstream& iofs, const string& logged_name);  //注销账号函数,用析构函数清除用户
+    void Change_Name(fstream& iofs, const string& old_name);//输入内容（传参）：已知已经登陆的用户的身份（可以确定三种用户类型之一和原来用户名）iofs对象选择就根据用户类型选择对应全局变量即可
+    void Change_Password(fstream& iofs, const string& logged_name);//输入内容（传参）：已知已经登陆的用户的身份（可以确定三种用户类型之一和用户名）
 };
 
 class Mall:public User
 {
 protected:
     int Heat_Spot;  //热度点余额
-    int Head_Now;   //目前热度
+    int Heat_Now;   //目前热度
     vector<History> Pursuit_History; //热度点购买记录
     string Rate;    //商场评分
     int RatePeo;//当前参与评分人数
@@ -70,6 +69,7 @@ public:
     string GetMallName();
     static int get_id1();
     friend class manager;
+    friend void input_mall_vct();
 };
 int Mall::id1=10900000;
 
@@ -183,5 +183,11 @@ class Apperance:public Brand{
 void Register();
 bool check_passwd_validity(int passwd_len,string passwd);
 bool check_username_validity(string UserName);
+void input_mall_vct();
+void output_mall_vct();
+void input_buyer_vct();
+void output_buyer_vct();
+void input_manager_vct();
+void output_manager_vct();
 
 #endif
